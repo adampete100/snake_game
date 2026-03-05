@@ -46,7 +46,7 @@ def spawn_fruit():
         fruit = [x, y]
         #check if fruit coordinates are within the snake coordinates.
         if fruit not in snake_body:
-            return [fruit]
+            return fruit
         #if they are, the while loop runs again until they are outside of the snake body
 
 #initialize the fruit coordinates for later
@@ -85,6 +85,7 @@ def main():
                 
         window.fill(black) #reset background to black 
         #(this makes the redraw exclude the extra tail leftover from previous snake position, otherwise it'd remain onscreen)
+        print(f"DEBUG: fruit_coords is {fruit_coords}")
         pygame.draw.rect(window, red, pygame.Rect(fruit_coords[0], fruit_coords[1], CELL_SIZE, CELL_SIZE)) #draw fruit
         for segment in snake_body:    
             pygame.draw.rect(window, purple, pygame.Rect(segment[0], segment[1], cell_height, cell_width)) #draw new snake
