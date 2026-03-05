@@ -4,24 +4,27 @@ import sys, pygame, random
 #initialize pygame
 pygame.init()
 
-#make color variables
+#make color variables to utilize for background, snake, and fruit color
 black = pygame.Color(0, 0, 0)
 white = pygame.Color(255, 255, 255)
 red = pygame.Color(180, 0, 0)
 purple = pygame.Color(180, 0, 180)
 blue = pygame.Color(0, 0, 180)
 
-#create a window and set its size + background color
-window_size = width, height = 500, 500
+#set window dimensions and cell size (was originally a percentage of the dimension, 
+#this new setup makes it the same regardless of window dimensions)
+window_size = window_width, window_height = 800, 600
+CELL_SIZE = 25
+cell_width = CELL_SIZE
+cell_height = CELL_SIZE
+
 window = pygame.display.set_mode(window_size) 
-window.fill(black) #set background color as black (color value stored in bg_color) 
+window.fill(black) #set background color as black
 pygame.display.set_caption(f'Snake  (score: 0)')
 
-#create 20x20 grid to fill window, and set cell sizes
+#make a grid for the snake and fruit to be drawn on
 ROWS = 20
 COLUMNS = 20
-cell_width = width // COLUMNS
-cell_height = height // ROWS
 
 #track game speed
 fps = pygame.time.Clock()
@@ -30,13 +33,23 @@ score = 0
 snake_speed = 6
 frame_count = 0
 
-#define  starting snake coords & direction
+#define starting snake coords & direction
 snake_body = [[100, 50], [75, 50], [50, 50]]
-direction = (25, 0)
+direction = (CELL_SIZE, 0)
+
+#picks a random grid-aligned spot within the window, and spawns a fruit there
+def spawn_fruit():
+    # Subtract CELL_SIZE from width/height so fruit doesn't spawn off-screen
+    x = random.randrange(0, window_width - CELL_SIZE, CELL_SIZE)
+    y = random.randrange(0, window_height - CELL_SIZE, CELL_SIZE)
+    return [x, y]
+
+# Initialize the first fruit
+fruit_coords = spawn_fruit()
 
 #main game loop
 def main():
-    global direction, score, frame_count #allow modification of global variables
+    global direction, score, frame_count, fruit_coords #allow modification of global variables
 
     while True:
         for event in pygame.event.get():
@@ -53,19 +66,27 @@ def main():
             elif event.key == pygame.K_RIGHT and direction != (-25, 0):
                 direction = (25, 0)
 
-        #snake redrawing logic
+        #redraw snake with new head position after moving it in the player's input direction 
+        #(happens every 6 frames out of 60 (10 times in a second))
         if frame_count % snake_speed == 0:
             new_head = [snake_body[0][0] + direction[0], snake_body[0][1] + direction[1]] #calculate the new head position
             snake_body.insert(0, new_head) #add the new head to the body 
-            snake_body.pop() #remove the tail to maintain length
-
+            
+            if fruit_coords == new_head:
+                score += 1 #adds to displayed score variable on window caption
+                fruit_coords = spawn_fruit()
+            else: 
+                snake_body.pop() #remove the tail to maintain length (if fruit wasn't eaten)
+                
         window.fill(black) #reset background to black 
+        #(this makes the redraw exclude the extra tail leftover from previous snake position, otherwise it'd remain onscreen)
+        pygame.draw.rect(window, red, pygame.Rect(fruit_coords[0], fruit_coords[1], CELL_SIZE, CELL_SIZE)) #draw fruit
         for segment in snake_body:    
             pygame.draw.rect(window, purple, pygame.Rect(segment[0], segment[1], cell_height, cell_width)) #draw new snake
 
-        pygame.display.flip() #refresh the screen to show the snake
-        fps.tick(60) #maintain snake speed based on fps
-        frame_count += 1 #increment frame
+        pygame.display.flip() #refresh the screen to show the new snake
+        fps.tick(60) #set fps
+        frame_count += 1 #increment frame count
         pygame.display.set_caption(f'Snake  (score: {score})') #refresh window caption
 
 
@@ -81,7 +102,7 @@ def gameover():
     game_over_rect = game_over_surface.get_rect()
 
     #set display coords for game over message
-    game_over_rect.midtop(width/2, height/3)
+    game_over_rect.midtop(window_width/2, window_height/3)
 
     #display game over message
     window.blit(game_over_surface, game_over_rect)
