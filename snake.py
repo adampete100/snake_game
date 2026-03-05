@@ -106,22 +106,38 @@ def main():
         pygame.display.set_caption(f'Snake  (score: {score})') #refresh window caption
 
 
-#displays game over screen and ask to play again or quit
+#displays game over screen and displays "press key to quit" message. quits in the event of a keypress or when the window closes
 def gameover():
-    font = pygame.font.SysFont('arial', 80) #initialize font
-    game_over_surface = font.render(f'Your Score is : {score}') #initialize game over and retry message surfaces for text
-    game_over_rect = game_over_surface.get_rect() #initialize rect objects for game over message positioning
-    game_over_rect.midtop(window_width/2, window_height/3) #set display coords for the game over message
-    window.blit(game_over_surface, game_over_rect) #display game over message
+    #render separate lines because Pygame does not support \n
+    title_font = pygame.font.SysFont('arial', 80)
+    info_font  = pygame.font.SysFont('arial', 30)
+
+    title_surface = title_font.render('GAME OVER', True, white)
+    score_surface = info_font.render(f'Final Score: {score}', True, white)
+    quit_surface  = info_font.render('Press any key to Quit', True, white)
+
+    #position surfaces relative to screen center
+    title_rect = title_surface.get_rect(center=(window_width/2, window_height/3))
+    score_rect = score_surface.get_rect(center=(window_width/2, window_height/2))
+    quit_rect  = quit_surface.get_rect(center=(window_width/2, window_height/1.5))
+
+    #disply message surfaces and 
+    window.blit(title_surface, title_rect)
+    window.blit(score_surface, score_rect)
+    window.blit(quit_surface, quit_rect)
     pygame.display.flip()
-    pygame.time.wait(3000) #wait 3 seconds
-
-    #quit pygame library
-    pygame.quit()
     
-    # quit the program
-    quit()
+    #checks for either user input or the window to get closed, then closes the program after 
+    #(the second if specifically breaks the loop in the even of a keypress, so the function can finish and exit)
+    waiting = True
+    while waiting:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                waiting = False 
 
-#call main
+#call main to run the program
 if __name__ == "__main__":
     main()
