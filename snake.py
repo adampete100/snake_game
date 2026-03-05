@@ -39,12 +39,17 @@ direction = (CELL_SIZE, 0)
 
 #picks a random grid-aligned spot within the window, and spawns a fruit there
 def spawn_fruit():
-    # Subtract CELL_SIZE from width/height so fruit doesn't spawn off-screen
-    x = random.randrange(0, window_width - CELL_SIZE, CELL_SIZE)
-    y = random.randrange(0, window_height - CELL_SIZE, CELL_SIZE)
-    return [x, y]
+    while True:
+       #subtract CELL_SIZE from width/height so fruit doesn't spawn off-screen
+        x = random.randrange(0, window_width - CELL_SIZE, CELL_SIZE)
+        y = random.randrange(0, window_height - CELL_SIZE, CELL_SIZE)
+        fruit = [x, y]
+        #check if fruit coordinates are within the snake coordinates.
+        if fruit not in snake_body:
+            return [fruit]
+        #if they are, the while loop runs again until they are outside of the snake body
 
-# Initialize the first fruit
+#initialize the fruit coordinates for later
 fruit_coords = spawn_fruit()
 
 #main game loop
