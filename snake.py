@@ -75,6 +75,16 @@ def main():
         #(happens every 6 frames out of 60 (10 times in a second))
         if frame_count % snake_speed == 0:
             new_head = [snake_body[0][0] + direction[0], snake_body[0][1] + direction[1]] #calculate the new head position
+
+            #check if the new head overlaps with the body (collides with it), and end the game if it does
+            if new_head in snake_body:
+                gameover()
+
+            #check if the new head goes outside the bounds of the window, and end the game if it does
+            if (new_head[0] < 0 or new_head[0] >= window_width or 
+                new_head[1] < 0 or new_head[1] >= window_height):
+                gameover()
+
             snake_body.insert(0, new_head) #add the new head to the body 
             
             if fruit_coords == new_head:
@@ -98,20 +108,11 @@ def main():
 
 #displays game over screen and ask to play again or quit
 def gameover():
-    #initialize font
-    font = pygame.font.SysFont('arial', 80)
-
-    #initialize game over and retry message surfaces for text
-    game_over_surface = font.render(f'Your Score is : {score}')
-
-    #initialize rect objects for game over message positioning
-    game_over_rect = game_over_surface.get_rect()
-
-    #set display coords for game over message
-    game_over_rect.midtop(window_width/2, window_height/3)
-
-    #display game over message
-    window.blit(game_over_surface, game_over_rect)
+    font = pygame.font.SysFont('arial', 80) #initialize font
+    game_over_surface = font.render(f'Your Score is : {score}') #initialize game over and retry message surfaces for text
+    game_over_rect = game_over_surface.get_rect() #initialize rect objects for game over message positioning
+    game_over_rect.midtop(window_width/2, window_height/3) #set display coords for the game over message
+    window.blit(game_over_surface, game_over_rect) #display game over message
     pygame.display.flip()
     pygame.time.wait(3000) #wait 3 seconds
 
