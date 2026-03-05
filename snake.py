@@ -128,15 +128,11 @@ def gameover():
     pygame.display.flip()
     
     #checks for either user input or the window to get closed, then closes the program after 
-    #(the second if specifically breaks the loop in the even of a keypress, so the function can finish and exit)
-    waiting = True
-    while waiting:
+    while True:
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            if event.type == pygame.QUIT or event.type == pygame.KEYDOWN:
                 pygame.quit()
                 sys.exit()
-            if event.type == pygame.KEYDOWN:
-                waiting = False 
 
 #call main to run the program
 if __name__ == "__main__":
