@@ -105,7 +105,7 @@ def main():
                 
         window.fill(black) #reset background to black 
         #(this makes the redraw exclude the extra tail leftover from previous snake position, otherwise it'd remain onscreen)
-        print(f"DEBUG: fruit_coords is {fruit_coords}")
+        
         pygame.draw.rect(window, red, pygame.Rect(fruit_coords[0], fruit_coords[1], CELL_SIZE, CELL_SIZE)) #draw fruit
         for segment in snake_body:    
             pygame.draw.rect(window, purple, pygame.Rect(segment[0], segment[1], cell_height, cell_width)) #draw new snake
