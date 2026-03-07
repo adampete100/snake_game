@@ -37,6 +37,11 @@ frame_count = 0
 snake_body = [[100, 50], [75, 50], [50, 50]]
 direction = (CELL_SIZE, 0)
 
+#load and start the game background soundtrack (also set volume level)
+pygame.mixer.music.load("music/Joshua McLean - Mountain Trials.mp3")
+pygame.mixer.music.set_volume(.05)
+pygame.mixer.music.play(-1)
+
 #picks a random grid-aligned spot within the window, and spawns a fruit there
 def spawn_fruit():
     while True:
@@ -117,11 +122,19 @@ def main():
 
 
 #display game over screen and displays the highscore and "press key to quit" messages. 
-#quits in the event of a keypress or when the window closes
+#edit: quits in the event of a keypress or when the window closes
+#edit: stops bgm and plays gameover sound effect
 def gameover(is_high_score):
+    pygame.mixer.music.stop()
+    pygame.mixer.music.unload()
+    pygame.mixer.music.load("music/8-bit-video-game-lose-sound.mp3")
+    pygame.mixer.music.play()
     
-    with open("high_score.txt", "r") as file:
-        high_score = int(file.read())
+    try:
+        with open("high-score.txt", "r") as file:
+            high_score = int(file.read())
+    except FileNotFoundError:
+        high_score = 0
     
     #render disctinct fonts for different messages
     title_font = pygame.font.SysFont('arial', 80)
@@ -144,11 +157,11 @@ def gameover(is_high_score):
     
 
 
-    #place message surfaces and refresh screen to display them 
-    window.blit(new_high_score_surface, new_high_score_rect)
+    #place message surfaces and refresh screen to display them
+    window.blit(high_score_surface, high_score_rect) 
     if is_high_score: #checks if there's a new high score (a True bool wuold be stored if so), 
                    #and displays the high score message if there is
-        window.blit(high_score_surface, high_score_rect)
+        window.blit(new_high_score_surface, new_high_score_rect)
     window.blit(title_surface, title_rect)
     window.blit(score_surface, score_rect)
     window.blit(quit_surface, quit_rect)
@@ -168,7 +181,7 @@ def save_high_score():
 
     #checks if high score file exists yet, if not the high score becomes zero temporarily
     try:
-        with open("high_score.txt", "r") as file:
+        with open("high-score.txt", "r") as file:
             current_high_score = int(file.read())
     except (FileNotFoundError, ValueError):
         current_high_score = 0
@@ -176,10 +189,10 @@ def save_high_score():
     #check if high score is lower than the current score, and updates it if it is 
     #(if there is no high score yet, it's set to zero for now, so it'll write a new high score)
     if current_high_score < score:
-        with open("high_score.txt", "w") as file:
+        with open("high-score.txt", "w") as file:
             file.write(str(score))
         return True
-    
+    return False
 
 
 #call main to run the program
