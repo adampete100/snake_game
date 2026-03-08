@@ -10,8 +10,7 @@ to move the snake, players just press the arrow keys in the corresponding direct
 
 In writing this game, my goal was to gain a better understanding of how to develop graphics, write logic, and debug a game on a basic level. This project taught me those things, and some extra things that are important. For example, making the game run at a specific speed so it's playable (otherwise it'll run as fast as the computer will let it, making it unplayable usually), displaying text on the game window, and how to play music.
 
-{add youtube link here}
-[Software Demo Video](http://youtube.link.goes.here)
+[Software Demo Video](https://youtu.be/CZvZURnnIMc)
 
 
 # Install Instructions
