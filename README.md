@@ -28,7 +28,6 @@ For this project, I used the VSCode IDE, the Python language, and the Pygame fra
 
 # Useful Websites
 
-{Make a list of websites that you found helpful in this project}
 * [Pygame Documentation](https://www.pygame.org/docs/)
 * [Pygame Subreddit (to look for answers for issues)](https://www.reddit.com/r/pygame/)
 * [GeeksforGeeks Pygame tutorials](https://www.geeksforgeeks.org/python/pygame-tutorial/)
